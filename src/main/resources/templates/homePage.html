@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://mdbootstrap.com/wp-content/themes/mdbootstrap4/css/compiled-4.7.5.min.css"><style></style><style type="text/css">/* Chart.js */
+@-webkit-keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}@keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}.chartjs-render-monitor{-webkit-animation:chartjs-render-animation 0.001s;animation:chartjs-render-animation 0.001s;}</style><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script></head><body aria-busy="true"><!--Navbar -->
+<div th:replace="/navbar :: header"></div>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<div id="container" style="height: 400px"></div>
+<script th:inline="javascript">
+    Highcharts.chart('container', {
+        chart : {
+            type : 'pie',
+            options3d : {
+                enabled : true,
+                alpha : 50,
+                beta : 0
+            }
+        },
+        title : {
+            text : 'Attendance Status'
+        },
+        tooltip : {
+            pointFormat : '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions : {
+            pie : {
+                allowPointSelect : true,
+                cursor : 'pointer',
+                depth : 35,
+                dataLabels : {
+                    enabled : true,
+                    format : '{point.name}'
+                }
+            }
+        },
+        series : [ {
+            type : 'pie',
+            name : 'Ratio',
+            data : [ [ 'Attendance', [[${countAtt}]] ] , [ 'Absence', [[${countAb}]] ] ]
+        } ]
+    });
+
+</script>
+<div th:if="${ #lists.isEmpty(attList)}">
+    <div class="alert alert-info" style="align-content: center; width: 500px; margin-left: 120px; font-size: xx-large" >
+        <strong ><i style="padding-right: 15px" class="fas fa-check" ></i>Info!</strong> You have no absence .
+    </div>
+</div>
+<div class="container">
+    <div class="row col-md-12 table-responsive">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Student name</th>
+                <th>Number of absence</th>
+                <th> Absence level</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${studentDetails.studentName}"></td>
+                <td th:text="${studentDetails.absenceCounter}"></td>
+                <td th:text="${studentDetails.absenceLevel}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div >
+    <div class="container">
+        <div class="row col-md-12 table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Course</th>
+                    <th>      </th>
+
+                    <th >absence day</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="attend:${attList}" >
+                    <td th:text="${attend.subjectName}"></td>
+                    <td>      </td>
+
+                    <td th:text="${attend.date}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
