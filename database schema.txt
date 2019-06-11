@@ -1,0 +1,46 @@
+create table teacher(
+teacherId int(11) not null auto_increment,
+teacherName varchar(25) not null,
+password varchar(25)  not null,
+primary key(teacherId)
+);
+create table theGroup(
+groupId int(11) not null auto_increment,
+groupName varchar(25) default null,
+studentId int(11) default null,
+primary key (groupId)
+/*CONSTRAINT FKSTUDENTID FOREIGN KEY (studentId) REFERENCES student (studentId) ON UPDATE CASCADE*/
+
+);
+create table student(
+studentID int(11) not null auto_increment,
+studentName varchar(25) default null,
+studentGroup int(11) default null,
+absenceCounter int (11) default 0,
+primary key (studentID)
+
+
+);
+
+create table attendance(
+attendanceId int(11) not null auto_increment,
+attendanceDate varchar(25) default null,
+studentId int (11) default null,
+groupsId int (11) default null,
+attendanceState smallint default null,
+primary key(attendanceId),
+ constraint FKATTENDANCESTUDENTID foreign key(studentId) references student(studentId),
+constraint FKATTENDANCEGROUPIDat foreign key(groupsId) references theGroup(groupId)
+);
+drop table attendance;
+alter table attendance add constraint FKATTENDANCEGROUPID foreign key(groupsId) references theGroup(groupId);
+alter table attendance add constraint FKATTENDANCESTUDENTID foreign key(studentId) references student(studentId);
+alter table theGroup add CONSTRAINT FKSTUDENTID FOREIGN KEY (studentId) REFERENCES student (studentId) ON UPDATE CASCADE;
+alter table student add column absenceLevel varchar(25) default'Low';
+alter table student add constraint FKSTUDENTGROUP foreign key(studentGroup) references theGroup(groupId);
+/**/
+alter table teacher add column groupsId int(11) null;
+alter table teacher add constraint FKATTENDANCEGROUPID foreign key(groupsId) references thegroup(groupId);
+alter table theGroup add column teacherId int(11)  default null  ;
+alter table theGroup add constraint FKTEACHERID foreign key(teacherId) references teacher (teacherId);
+ALTER TABLE teacher  add column teacherEmail varchar(255) default null unique;
